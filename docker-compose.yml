@@ -5,6 +5,9 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+      - WATCHFILES_POLL_DELAY=1
     env_file:
       - .env
     depends_on:
