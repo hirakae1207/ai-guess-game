@@ -19,6 +19,7 @@ CREATE TABLE Topic_pairs(
     FOREIGN KEY (topic1_id) REFERENCES Topics(id),
     FOREIGN KEY (topic2_id) REFERENCES Topics(id)
 );
+-- pair_idを消去
 
 CREATE TABLE Players(
     id INT AUTO_INCREMENT PRIMARY KEY,
