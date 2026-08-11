@@ -23,9 +23,7 @@ CREATE TABLE Topic_pairs(
 CREATE TABLE Players(
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(64),
-    pair_id INT,
     assigned_topic_id INT,
     keyword VARCHAR(64),
-    FOREIGN KEY (pair_id) REFERENCES Topic_pairs(id),
     FOREIGN KEY (assigned_topic_id) REFERENCES Topics(id)
 );
