@@ -19,13 +19,12 @@ CREATE TABLE Topic_pairs(
     FOREIGN KEY (topic1_id) REFERENCES Topics(id),
     FOREIGN KEY (topic2_id) REFERENCES Topics(id)
 );
+-- pair_idを消去
 
 CREATE TABLE Players(
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(64),
-    pair_id INT,
     assigned_topic_id INT,
     keyword VARCHAR(64),
-    FOREIGN KEY (pair_id) REFERENCES Topic_pairs(id),
     FOREIGN KEY (assigned_topic_id) REFERENCES Topics(id)
 );
