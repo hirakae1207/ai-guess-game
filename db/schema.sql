@@ -22,6 +22,11 @@ CREATE TABLE Topic_pairs(
 );
 -- pair_idを消去
 
+CREATE TABLE Games(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE Players(
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(64),
@@ -29,6 +34,8 @@ CREATE TABLE Players(
     keyword VARCHAR(64),
     FOREIGN KEY (assigned_topic_id) REFERENCES Topics(id)
 );
+
+
 
 INSERT INTO Themes(theme)VALUES("フルーツ");
 INSERT INTO Themes(theme)VALUES("動物");

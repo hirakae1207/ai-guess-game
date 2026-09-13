@@ -26,6 +26,29 @@ def get_all_theme(
 ):
     return crud.get_all_themes(db)
 
+# ラウンド追加
+@router.post("/game")
+def create_game(
+    db:Session = Depends(get_db)
+):
+    result = crud.create_game(db)
+
+    print("返すデータ\n", result)
+    return result
+
+
+# ラウンド取得
+@router.get("/game/{game_id}")
+def get_game(
+    game_id: int,
+    db: Session = Depends(get_db),
+):
+    result = crud.get_game(db, game_id= game_id)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="game not found")
+    return result
+
 #playerのnameの追加
 @router.post("/player")
 def create_name(
@@ -49,3 +72,5 @@ def get_name(
     if result is None:
         raise HTTPException(status_code=404, detail="player not found")
     return result
+
+# playerをお題へ割り振り
