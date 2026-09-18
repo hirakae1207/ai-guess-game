@@ -106,3 +106,27 @@ def get_player_topic(
     if result is None:
         raise HTTPException(satus_code=404, detail="topic not found")
     return result
+
+# keywordの追加
+@router.post("/player/keyword")
+def create_keyword(
+    player_id: int,
+    content: dict,
+    db: Session = Depends(get_db)
+):
+    result = crud.create_keyword(db, content, player_id=player_id)
+
+    return result
+
+# keywordの表示（create_keyword)
+@router.get("/player/keyword/{player_id}")
+def get_keyword(
+    player_id: int,
+    db: Session = Depends(get_db)
+):
+    result = crud.get_keyword(db, player_id=player_id)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail = "keyword not found")
+
+    return result
