@@ -236,6 +236,39 @@ def get_player_topic(
     return result
 
 
-        # SELECT Topics.topic_text FROM Topics
-        # INNER JOIN (SELECT assigned_topic_id FROM Players WHERE id = :player_id) as selected_player
-        # ON Topics.id = selected_player.assigned_topic_id
+def create_keyword(
+        db:Session,
+        content:dict,
+        player_id:int
+):
+    sql = text(
+        """
+        UPDATE Players SET keyword = :keyword WHERE id = :player_id
+        """
+    )
+    params = {
+        "keyword": content.get("keyword"),
+        "player_id":player_id
+        }
+    print(f"SQL: {sql}\nParams: {params}")
+    db.execute(sql, params)
+    db.commit()
+    result = get_keyword(db, player_id)
+
+    return result
+
+
+def get_keyword(
+        db:Session,
+        player_id: int
+):
+    sql = text(
+        """
+        SELECT name, assigned_topic_id, keyword FROM Players WHERE id = :player_id
+        """
+    )
+    params = {"player_id": player_id}
+    print(f"SQL: {sql}\nParams: {params}")
+    result = db.execute(sql, params).mappings().first()
+
+    return result
