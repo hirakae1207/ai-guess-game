@@ -272,3 +272,26 @@ def get_keyword(
     result = db.execute(sql, params).mappings().first()
 
     return result
+
+
+# ropicごとのkeywordの一覧表示
+    #game_idを指定したPlayer.keywordとassigned_topic=topic_idを指定したTopics
+def get_keyword_by_topic(
+        db: Session,
+        topic_id: int,
+        game_id: int
+):
+    sql = text(
+        """
+        SELECT Topics.topic_text, Players.name, Players.keyword FROM Topics 
+        INNER JOIN Players ON Topics.id = Players.assigned_topic_id 
+        WHERE Topics.id = :topic_id AND Players.game_id = :game_id"""
+    )
+    params = {
+        "topic_id": topic_id,
+        "game_id": game_id
+    }
+    print(f"SQL: {sql}\nParams: {params}")
+    result = db.execute(sql, params).mappings().all()
+
+    return result

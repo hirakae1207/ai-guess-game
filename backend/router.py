@@ -130,3 +130,17 @@ def get_keyword(
         raise HTTPException(status_code=404, detail = "keyword not found")
 
     return result
+
+# topicごとのkeywordの一覧表示
+@router.get("/keyword/{topic_id}")
+def get_keyword_by_topic(
+    topic_id: int,
+    game_id: int,
+    db: Session = Depends(get_db)
+):
+    result = crud.get_keyword_by_topic(db, topic_id=topic_id, game_id=game_id)
+
+    if result is None:
+        raise HTTPException(status_code=404, detail = "keywords not found")
+
+    return result
