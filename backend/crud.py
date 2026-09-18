@@ -131,6 +131,8 @@ def get_player_topic_by_game(
 
     return result
 
+
+
 # playerをお題へ割り振り
 import random
 
