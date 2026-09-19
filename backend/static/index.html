@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/stylesheet.css">
+        <title>ai-guess-game</title>
+    </head>
+
+    <body>
+        <div id = "screen-start" class="screen active">
+            <h1>AI推理ゲーム</h1>
+            <p>AIに自分のお題を当てさせよう！！</p>
+            <button onclick="startGame(1)">フルーツ</button>
+            <button onclick="startGame(2)">動物</button>
+        </div>
+        <div id = "screen-name" class="screen">
+            <h2>名前を入力</h2>
+            <input type="text" id="create-name1" name="class_name1" required />
+            <input type="text" id="create-name2" name="class_name2" required />
+            <input type="text" id="create-name3" name="class_name3" required />
+            <button>つぎへ</button>
+        </div>
+        <div id="screen-instraction" class="screen">
+            <h2>ルール説明</h2>
+            <p>
+                AIに自分のお題を当てさせよう！！
+                <br>
+                与えられたお題のキーワードを考えよう
+                <br>
+                お題の種類は全部で2種類
+                <br>
+                みんなのキーワードをもとにAIがお題を推測するよ
+                <br>
+                AIに当ててもらえたら勝利
+            </p>
+        </div>
+        <div id="screen-next-person" class="screen">
+            
+        </div>
+    </body>
+    <script src="/static/index.js"></script>    
+</html>
