@@ -18,7 +18,7 @@
             <input type="text" id="create-name1" name="class_name1" required />
             <input type="text" id="create-name2" name="class_name2" required />
             <input type="text" id="create-name3" name="class_name3" required />
-            <button>つぎへ</button>
+            <button onclick="createPlayer()">つぎへ</button>
         </div>
         <div id="screen-instraction" class="screen">
             <h2>ルール説明</h2>
@@ -33,9 +33,13 @@
                 <br>
                 AIに当ててもらえたら勝利
             </p>
+            <button onclick="showNextPerson()">ゲームスタート</button>
         </div>
         <div id="screen-next-person" class="screen">
-            
+            <h2 id = "next-person">
+                <!-- 名前が入るよ -->
+            </h2>
+            <button onclick="showScreen('screen-keyword')">準備完了</button>
         </div>
     </body>
     <script src="/static/index.js"></script>    
