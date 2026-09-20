@@ -95,7 +95,7 @@ def get_name(
 ):
     sql = text(
         """
-        SELECT name FROM Players
+        SELECT id, name FROM Players
         WHERE id = :id
         """
     )
