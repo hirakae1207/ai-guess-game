@@ -143,7 +143,10 @@ def create_keyword(
     content: dict,
     db: Session = Depends(get_db)
 ):
-    result = crud.create_keyword(db, content, player_id=player_id)
+    try:
+        result = crud.create_keyword(db, content, player_id=player_id)
+    except crud.NgWordError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     return result
 
@@ -205,11 +208,17 @@ def AI_judge(
     prompt = (
         f"あなたはマジカルバナナに似たゲームに参加しています。"
         f"あなたのほかに3人の人間がいます。"
-        f"あなたは３人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。"
-        f"テーマの{theme[0]}にあったお題が2つ出されました。"
+        f"あなたは4人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。"
+        f"テーマの{theme}にあったお題が2つ出されました。"
         f"お題は「{topics[0]}」と「{topics[1]}」です。"
-        f"３人からのキーワードは{'、'.join(f'「{k}」' for k in keywords)}でした"
-        f"{topics[0]}と{topics[1]}のどちらに近い？"
+        f"4人からのキーワードは{'、'.join(f'「{k}」' for k in keywords)}でした"
+        f"{topics[0]}と{topics[1]}のどちらでしょうか？"
+        f"必ず片方のみに絞ってください。"
+        f"以下に文章の制限を示します。"
+        f"字数制限は200字以内とします。"
+        f"10歳から15歳ぐらいの話し方にしてください。"
+        f"マークダウン方式は使用しないでください。"
+        f"これらの文章の制限を守り、解答時にはこれらの文章の制限には言及してはいけません。"
     )
 
     response = client.models.generate_content(

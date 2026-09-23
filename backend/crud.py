@@ -198,7 +198,7 @@ import random
 def assign_groups(player_name, pattern):
     """
     player_name: プレイヤー名のリスト
-    pattern: 人数に応じたグループの構成 例:['A', 'A', 'B']
+    pattern: 人数に応じたグループの構成 例:['A', 'A', 'B', 'B']
     """
     labels = pattern.copy()
     random.shuffle(labels)
@@ -250,7 +250,7 @@ def assign_groups_and_save(
 
 
     # 割り振りパターンを決めて上記の関数を呼び出す
-    pattern = ["A", "A", "B"]
+    pattern = ["A", "A", "B", 'B']
     assignment = assign_groups(player_names, pattern)
 
     # "A"/"B"を実際のTopics.idに変換
@@ -294,27 +294,45 @@ def get_player_topic(
     
     return result
 
-# keywordの作成
+# crud.py
+class NgWordError(Exception):
+    """NGワードが含まれている場合の例外"""
+    pass
+
+def contains_ng_word(text: str, ng_words: list) -> bool:
+    return text in ng_words
+
 def create_keyword(
-        db:Session,
-        content:dict,
-        player_id:int
-):
+        db: Session,
+        content: dict,
+        player_id: int
+    ):
+    sql_ng = text(
+        """
+        SELECT Topic_ng_words.ng_word FROM Topic_ng_words 
+        INNER JOIN Players on Topic_ng_words.topic_id = Players.assigned_topic_id
+        WHERE Players.id = :player_id
+        """
+    )
+    params_ng = {"player_id": player_id}
+    result_ng = db.execute(sql_ng, params_ng).mappings().all()
+    ng_words = [row["ng_word"] for row in result_ng]
+
+    keyword = content.get("keyword")
+
+    if contains_ng_word(keyword, ng_words):
+        raise NgWordError("使用できない単語が含まれています。")
+
     sql = text(
         """
         UPDATE Players SET keyword = :keyword WHERE id = :player_id
         """
-    )
-    params = {
-        "keyword": content.get("keyword"),
-        "player_id":player_id
-        }
-    print(f"SQL: {sql}\nParams: {params}")
+        )
+    params = {"keyword": keyword, "player_id": player_id}
     db.execute(sql, params)
     db.commit()
-    result = get_keyword(db, player_id)
 
-    return result
+    return get_keyword(db, player_id)
 
 
 def get_keyword(

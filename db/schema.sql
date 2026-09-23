@@ -39,6 +39,13 @@ CREATE TABLE Players(
     FOREIGN KEY (game_id) REFERENCES Games(id)
 );
 
+CREATE TABLE Topic_ng_words (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic_id INT NOT NULL,
+    ng_word VARCHAR(100) NOT NULL,
+    FOREIGN KEY (topic_id) REFERENCES Topics(id)
+);
+
 
 
 INSERT INTO Themes(theme)VALUES("フルーツ");
@@ -49,6 +56,28 @@ INSERT INTO Topics(theme_id, topic_text)VALUES(1, "梨");
 
 INSERT INTO Topics(theme_id, topic_text)VALUES(2, "犬");
 INSERT INTO Topics(theme_id, topic_text)VALUES(2, "猫");
+
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(1, "りんご");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(1, "apple");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(1, "林檎");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(1, "リンゴ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(1, "アップル");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(2, "梨");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(2, "なし");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(2, "pear");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(2, "ナシ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(2, "ペアー");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(3, "犬");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(3, "いぬ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(3, "dog");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(3, "ドッグ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(3, "イヌ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(4, "猫");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(4, "ねこ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(4, "cat");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(4, "ネコ");
+INSERT INTO Topic_ng_words(topic_id, ng_word)VALUES(4, "キャット");
+
 
 INSERT INTO Topic_pairs(theme_id, topic1_id, topic2_id)VALUES(1, 1, 2);
 INSERT INTO Topic_pairs(theme_id, topic1_id, topic2_id)VALUES(2, 3, 4);
