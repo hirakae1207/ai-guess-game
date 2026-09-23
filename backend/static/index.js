@@ -37,7 +37,8 @@ function createPlayer(){
     const names = [
         document.getElementById("create-name1").value.trim(),
         document.getElementById("create-name2").value.trim(),
-        document.getElementById("create-name3").value.trim()
+        document.getElementById("create-name3").value.trim(),
+        document.getElementById("create-name4").value.trim()
     ];
 
     const requests = names.map((name)=>
@@ -122,22 +123,25 @@ function showKeyword(){
 function createKeyword(){
     const keyword = document.getElementById("create-keyword").value.trim();
     const player = players[number];
-    document.getElementById("create-keyword").value = "";
+
     fetch(`/player/keyword?player_id=${player.id}`,{
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({keyword: keyword})
     })
     .then((response) =>{
+        document.getElementById("create-keyword").value = "";
         if (!response.ok){
-            throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+            return response.json().then((data) => {
+                throw new Error(data.detail || `HTTPエラー! ステータス: ${response.status}`);
+            });
         }
-        return response .json();
+        document.getElementById("create-keyword").value = "";
+        return response.json();
     })
-
     .then(()=>{
         number++;
-        if(number < 3){
+        if(number < 4){
             showNextPerson();
         }
         else{
@@ -150,8 +154,8 @@ function createKeyword(){
     })
     .catch((error) => {
         console.error("エラー:", error);
-        alert("キーワードの送信に失敗しました。もう一度お試しください。");
-});
+        alert(error.message);
+    });
 }
 
 
