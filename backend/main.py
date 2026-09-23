@@ -17,11 +17,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def read_root():
     return{"message": "Hello, ai-guess-game!"}
 
-@app.get("/test-gemini")
-def test_gemini():
-    response = client.models.generate_content(
-    model= "gemini-3.1-flash-lite",
-    contents= "あなたはマジカルバナナに似たゲームに参加しています。あなたのほかに３人の人間がいます。あなたは３人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。テーマにあったお題が２つ出されました。テーマはフルーツ。お題は「りんご」と「梨」です。３人からのキーワードは「赤い」「iphone」「緑」でした。りんごと梨のどちらに近い？")
-    return {"response": response.text}
+# @app.get("/test-gemini")
+# def test_gemini():
+
+#     response = client.models.generate_content(
+#     model= "gemini-3.1-flash-lite",
+#     contents= (f"あなたはマジカルバナナに似たゲームに参加しています。あなたのほかに３人の人間がいます。あなたは３人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。テーマにあったお題が２つ出されました。テーマはフルーツ。お題は「りんご」と「梨」です。３人からのキーワードは「赤い」「iphone」「緑」でした。りんごと梨のどちらに近い？")
+#     return {"response": response.text}
 
 app.include_router(router)

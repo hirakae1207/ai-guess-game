@@ -16,6 +16,64 @@ def get_all_themes(
 
     return result
 
+# game_idのthemeの表示
+def get_theme_by_game_id(
+        db: Session,
+        game_id: int
+):
+    sql = text(
+        """
+        SELECT theme FROM Themes INNER JOIN Games on Themes.id = Games.theme_id WHERE Games.id = :game_id
+        """
+    )
+    params = {"game_id": game_id}
+    print(f"SQL: {sql}\nParams: {params}")
+    result = db.execute(sql, params).mappings().first()
+
+    return result
+
+
+# game_idからtopicの取得
+# def get_topic_by_game_id(
+#         db:Session,
+#         game_id: int
+# ):
+#     sql = text(
+#         """
+#         SELECT Topics.topic_text FROM Topics inner join 
+#         (SELECT Topic_pairs.topic1_id, Topic_pairs.topic2_id FROM Topic_pairs 
+#         INNER JOIN Games on Topic_pairs.theme_id=Games.theme_id) as X on Topics.id = X.topic1_id and Topics.id = X.topic2_id
+#         WHERE Topic_pairs.topic1_id = :Topics.id AND Topic_pairs.topic2_id = :Topics.id"""
+#     )
+#     params = {"game_id": game_id}
+#     print(f"SQL: {sql}\nParams: {params}")
+#     result = db.execute(sql, params).mappings().all()
+
+#     if result is not None:
+#         result = result._asdict()
+
+#     return result
+def get_topic_by_game_id(
+        db: Session,
+        game_id: int
+):
+    sql = text(
+        """
+        SELECT Topics.id, Topics.topic_text
+        FROM Games
+        INNER JOIN Topic_pairs ON Games.theme_id = Topic_pairs.theme_id
+        INNER JOIN Topics ON Topics.id = Topic_pairs.topic1_id OR Topics.id = Topic_pairs.topic2_id
+        WHERE Games.id = :game_id
+        """
+    )
+    params = {"game_id": game_id}
+    print(f"SQL: {sql}\nParams: {params}")
+    result = db.execute(sql, params).mappings().all()
+
+    return result
+
+
+    
 #ラウンド追加
 def create_game(
         db:Session,
@@ -110,6 +168,7 @@ def get_name(
     print(f"DB操作の結果: {result}")
 
     return result
+
 
 # Player.id, name, assigned_topic_idを表示
 def get_player_topic_by_game(
@@ -235,7 +294,7 @@ def get_player_topic(
     
     return result
 
-
+# keywordの作成
 def create_keyword(
         db:Session,
         content:dict,
@@ -273,8 +332,24 @@ def get_keyword(
 
     return result
 
+# keywordの表示（sendAI)
+def get_keyword_by_game_id(
+        db:Session,
+        game_id: int
+):
+    sql = text(
+        """
+        SELECT keyword FROM Players where game_id = :game_id
+        """
+    )
+    params = {"game_id": game_id}
+    print(f"SQL: {sql}\nParams: {params}")
+    result = db.execute(sql,params).mappings().all()
 
-# ropicごとのkeywordの一覧表示
+    return result
+
+
+# topicごとのkeywordの一覧表示
     #game_idを指定したPlayer.keywordとassigned_topic=topic_idを指定したTopics
 def get_keyword_by_topic(
         db: Session,

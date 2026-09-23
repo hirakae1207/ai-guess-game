@@ -15,9 +15,9 @@
         </div>
         <div id = "screen-name" class="screen">
             <h2>名前を入力</h2>
-            <input type="text" id="create-name1" name="class_name1" required />
-            <input type="text" id="create-name2" name="class_name2" required />
-            <input type="text" id="create-name3" name="class_name3" required />
+            <input type="text" id="create-name1" name="class_name1" required autocomplete="off" />
+            <input type="text" id="create-name2" name="class_name2" required autocomplete="off" />
+            <input type="text" id="create-name3" name="class_name3" required autocomplete="off" />
             <button onclick="createPlayer()">つぎへ</button>
         </div>
         <div id="screen-instraction" class="screen">
@@ -39,7 +39,24 @@
             <h2 id = "next-person">
                 <!-- 名前が入るよ -->
             </h2>
-            <button onclick="showScreen('screen-keyword')">準備完了</button>
+            <button onclick="showKeyword()">準備完了</button>
+        </div>
+        <div id = "screen-keyword" class="screen">
+            <h3>あなたのお題は</h3>
+            <h2 id="player_theme">
+                <!-- お題が入る -->
+            </h2>
+            <input type="text" id="create-keyword" name="create_keyword" required autocomplete="off" />
+            <button onclick="createKeyword()">つぎへ</button>
+        </div>
+        <div id ="screen-result" class="screen">
+            <h2>AIの判定は…</h2>
+            <div id="AI_judge">
+                <!-- AIの判定内容 -->
+            </div>
+            <p id="topic1"><!-- トピック1 --></p>
+            <p id="topic2"><!--トピック2 --></p>
+            <div id="keyword"><!--キーワード--></div>
         </div>
     </body>
     <script src="/static/index.js"></script>    
