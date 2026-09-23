@@ -2,6 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, Body
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
+from google import genai
+import os
+
+import re
+
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
 import crud
 
 router = APIRouter()
@@ -25,6 +32,28 @@ def get_all_theme(
     db: Session = Depends(get_db),
 ):
     return crud.get_all_themes(db)
+
+# game_idのthemeの表示
+@router.get("/game/theme")
+def get_theme_by_game_id(
+    game_id: int,
+    db:Session = Depends(get_db)
+):
+    result = crud.get_theme_by_game_id(db, game_id=game_id)
+
+    
+    return result
+
+# game_idのtopic_textの表示
+@router.get("/game/topic")
+def get_topic_by_game_id(
+    game_id: int,
+    db:Session = Depends(get_db)
+):
+    result = crud.get_topic_by_game_id(db, game_id=game_id)
+
+
+    return result
 
 # ラウンド追加
 @router.post("/game")
@@ -131,6 +160,20 @@ def get_keyword(
 
     return result
 
+# keywordの表示(sendAI)
+@router.get("/keyword/player/{game_id}")
+def get_keyword_by_game_id(
+    game_id: int,
+    db: Session = Depends(get_db)
+):
+    result = crud.get_keyword_by_game_id(db, game_id=game_id)
+
+    if result is None:
+        raise HTTPException(satus_code=404, detail="keywords not found")
+
+    return result
+
+
 # topicごとのkeywordの一覧表示
 @router.get("/keyword/{topic_id}")
 def get_keyword_by_topic(
@@ -144,3 +187,35 @@ def get_keyword_by_topic(
         raise HTTPException(status_code=404, detail = "keywords not found")
 
     return result
+
+#AIの判定に使う
+@router.post("/judge")
+def AI_judge(
+    game_id: int,
+    db: Session = Depends(get_db)
+):
+    theme_result = crud.get_theme_by_game_id(db, game_id)
+    topic_result = crud.get_topic_by_game_id(db, game_id)
+    keyword_result = crud.get_keyword_by_game_id(db, game_id)
+
+    theme = theme_result["theme"]
+    topics = [top["topic_text"] for top in topic_result]
+    keywords = [key["keyword"] for key in keyword_result]
+
+    prompt = (
+        f"あなたはマジカルバナナに似たゲームに参加しています。"
+        f"あなたのほかに3人の人間がいます。"
+        f"あなたは３人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。"
+        f"テーマの{theme[0]}にあったお題が2つ出されました。"
+        f"お題は「{topics[0]}」と「{topics[1]}」です。"
+        f"３人からのキーワードは{'、'.join(f'「{k}」' for k in keywords)}でした"
+        f"{topics[0]}と{topics[1]}のどちらに近い？"
+    )
+
+    response = client.models.generate_content(
+        model="gemini-3.1-flash-lite",
+        contents=prompt,
+    )
+
+    clean_text = re.sub(r"\*\*(.+?)\*\*", r"\1", response.text)
+    return{"response": clean_text}
