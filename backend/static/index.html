@@ -3,61 +3,74 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="/static/stylesheet.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+
         <title>ai-guess-game</title>
     </head>
 
     <body>
-        <div id = "screen-start" class="screen active">
-            <h1>AI推理ゲーム</h1>
-            <p>AIに自分のお題を当てさせよう！！</p>
-            <button onclick="startGame(1)">フルーツ</button>
-            <button onclick="startGame(2)">動物</button>
-        </div>
-        <div id = "screen-name" class="screen">
-            <h2>名前を入力</h2>
-            <input type="text" id="create-name1" name="class_name1" required autocomplete="off" />
-            <input type="text" id="create-name2" name="class_name2" required autocomplete="off" />
-            <input type="text" id="create-name3" name="class_name3" required autocomplete="off" />
-            <input type="text" id="create-name4" name="class_name4" required autocomplete="off" />
-            <button onclick="createPlayer()">つぎへ</button>
-        </div>
-        <div id="screen-instraction" class="screen">
-            <h2>ルール説明</h2>
-            <p>
-                AIに自分のお題を当てさせよう！！
-                <br>
-                与えられたお題のキーワードを考えよう
-                <br>
-                お題の種類は全部で2種類
-                <br>
-                みんなのキーワードをもとにAIがお題を推測するよ
-                <br>
-                AIに当ててもらえたら勝利
-            </p>
-            <button onclick="showNextPerson()">ゲームスタート</button>
-        </div>
-        <div id="screen-next-person" class="screen">
-            <h2 id = "next-person">
-                <!-- 名前が入るよ -->
-            </h2>
-            <button onclick="showKeyword()">準備完了</button>
-        </div>
-        <div id = "screen-keyword" class="screen">
-            <h3>あなたのお題は</h3>
-            <h2 id="player_theme">
-                <!-- お題が入る -->
-            </h2>
-            <input type="text" id="create-keyword" name="create_keyword" required autocomplete="off" />
-            <button onclick="createKeyword()">つぎへ</button>
-        </div>
-        <div id ="screen-result" class="screen">
-            <h2>AIの判定は…</h2>
-            <div id="AI_judge">
-                <!-- AIの判定内容 -->
+        <div id = "all">
+            <div id = "screen-start" class="screen active">
+                <h1>AI推理ゲーム</h1>
+                <p>AIに自分のお題を当てさせよう！！</p>
+                <button class = "topic-button" onclick="startGame(1)">フルーツ</button>
+                <button class = "topic-button" onclick="startGame(2)">アニマル</button>
             </div>
-            <p id="topic1"><!-- トピック1 --></p>
-            <p id="topic2"><!--トピック2 --></p>
-            <div id="keyword"><!--キーワード--></div>
+            <div id ="game">
+                <div id = "screen-name" class="screen">
+                    <h2>名前を入力</h2>
+                    <input type="text" id="create-name1" name="class_name1" required autocomplete="off" />
+                    <input type="text" id="create-name2" name="class_name2" required autocomplete="off" />
+                    <input type="text" id="create-name3" name="class_name3" required autocomplete="off" />
+                    <input type="text" id="create-name4" name="class_name4" required autocomplete="off" />
+                    <button onclick="createPlayer()">つぎへ</button>
+                </div>
+                <div id="screen-instraction" class="screen">
+                    <h2>ルール説明</h2>
+                    <p id="instraction">
+                        今からお題が与えられるよ
+                        <br>
+                        お題のキーワードを考えよう
+                        <br>
+                        お題の種類は全部で2種類あるよ
+                        <br>
+                        みんなのキーワードをもとにAIがお題を推測するよ
+                        <br>
+                        お題をAIに当ててもらえた方が勝利!
+                        <br>
+                    </p>
+                    <button onclick="showNextPerson()">ゲームスタート</button>
+                </div>
+                <div id="screen-next-person" class="screen">
+                    <h2 id = "next-person">
+                        <!-- 名前が入るよ -->
+                    </h2>
+                    <button onclick="showKeyword()">準備完了</button>
+                </div>
+                <div id = "screen-keyword" class="screen">
+                    <h3>あなたのお題は</h3>
+                    <h2 id="player_theme">
+                        <!-- お題が入る -->
+                    </h2>
+                    <input type="text" id="create-keyword" name="create_keyword" required autocomplete="off" />
+                    <button onclick="createKeyword()">つぎへ</button>
+                </div>
+                <div id="screen-result" class="screen">
+                <h2>AIの判定は…</h2>
+                <div id="AI_judge"><!-- AIの判定内容 --></div>
+                    <div id="topic_1">
+                    <h3 id="topic1"><!-- トピック1 --></h3>
+                    <div id="keyword_topic1"><!--1キーワード--></div>
+                    </div>
+                    <div id="topic_2">
+                    <h3 id="topic2"><!--トピック2 --></h3>
+                    <div id="keyword_topic2"></div>
+                </div>
+                </div>
+            </div>
         </div>
     </body>
     <script src="/static/index.js"></script>    

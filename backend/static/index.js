@@ -237,8 +237,8 @@ function getTopic(){
     .then((result)=>{
         topic1_id = result[0].id
         topic2_id = result[1].id
-        document.getElementById("topic1").textContent=`topic1: ${result[0].topic_text}`;
-        document.getElementById("topic2").textContent=`topic2: ${result[1].topic_text}`;
+        document.getElementById("topic1").textContent=`${result[0].topic_text}`;
+        document.getElementById("topic2").textContent=`${result[1].topic_text}`;
     })
     .catch((error) => {
         console.error("エラー:", error);
@@ -248,6 +248,7 @@ function getTopic(){
 
 function getKeyword() {
   const topicIds = [topic1_id, topic2_id];
+  const divIds = ["keyword_topic1", "keyword_topic2"];
 
   const requests = topicIds.map((topicId) =>
     fetch(`/keyword/${topicId}?game_id=${gameId}`).then((response) => {
@@ -260,14 +261,14 @@ function getKeyword() {
 
   Promise.all(requests)
     .then((results) => {
-      const keywordDiv = document.getElementById("keyword");
-      keywordDiv.innerHTML = "";
+      results.forEach((topicGroup, index) => {
+        const targetDiv = document.getElementById(divIds[index]);
+        targetDiv.innerHTML = "";
 
-      results.forEach((topicGroup) => {
         topicGroup.forEach((row) => {
           const p = document.createElement("p");
-          p.textContent = `${row.name}さん: ${row.keyword}`;
-          keywordDiv.appendChild(p);
+          p.textContent = `${row.name}さん   ${row.keyword}`;
+          targetDiv.appendChild(p);
         });
       });
     })
