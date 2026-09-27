@@ -1,2 +1,100 @@
 .screen { display: none;}
-.screen.active { display: block;}
+.screen.active {
+  display: block;
+  width: 100%;
+}
+
+body{
+  margin: 0%;
+  background-color: #F4F7F9;
+  color: #2F4858;
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+#all{
+  margin: 7% 20%;
+  width: 60%;
+  font-size: 25px;
+  font-weight: 475;
+  text-align: center;
+}
+
+#game{
+  margin: 80px 0px 0px 0px;
+}
+
+h1{
+  margin: 5%;
+  font-family: "Kaisei Decol", serif;
+  font-size: 95px;
+  font-weight: 600;
+  color: #33658A;
+  text-align: center; 
+}
+
+h2{
+  margin: 5%;
+  font-size: 40px;
+  font-weight: 800;
+  color: #33658A;
+}
+
+h3{
+  margin: 5%;
+  font-size: 30px;
+  font-weight: 800;
+  color: #33658A;
+}
+
+
+button{
+  margin: 7% 0 0 0;
+  width: 60%;
+  height: 60px;
+  border-radius: 8px;
+  border: none;
+  background-color: #F26419;
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  color: #F7F0ED;
+  
+}
+
+input{
+  display: block;
+  text-align: center;
+  width: 80%;
+  margin: 15px auto;
+  border: none;
+  border-radius: 5px;
+  /* outline-color: #33658A; */
+  font-family: "Noto Sans JP", sans-serif;
+  color: #2F4858;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+input:focus{
+    outline: 2px solid #33658A;
+}
+
+#instraction{
+  margin: 0 10%;
+  text-align: left;
+}
+
+.topic-button{
+  width: 40%;
+  height: 60px;
+  margin: 7.5% 1.25%;
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+#topic_1,
+#topic_2{
+  display: inline-block;
+  width: 40%
+}
