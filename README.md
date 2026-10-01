@@ -1,4 +1,4 @@
-# AI推理ゲーム(仮)
+# AI推理ゲーム
 
 マジカルバナナのアレンジ版。似たような2種類のお題となるキーワードが出される。
 お題は1人だけ別のお題となっており、ユーザーはお題のキーワードをAIに渡す。
@@ -14,47 +14,11 @@ AIがどちらのお題に近いか判定して遊ぶパーティーゲーム。
 	- キーワード入力
 - AI判定
 - 結果
-
-#### お題割り振りパターン
-- 3人：2 vs 1
-- 4人：3 vs 1
-- 5人：3 vs 2
-- 3~5人のパターン分のラベル配列
-```
-"""3人ver."""
-import random
-
-def assign_groups(player_names, pattern):
-    """
-    player_names: プレイヤー名のリスト 例: ['Aさん', 'Bさん', 'Cさん']
-    pattern: 人数に応じたグループの構成 例: ['A', 'A', 'B'] (3人:2vs1の場合)
-    """
-    labels = pattern.copy()      # ①
-    random.shuffle(labels)       # ②
-
-    assignment = {}              # ③
-    for name, label in zip(player_names, labels):  # ④
-        assignment[name] = label
-
-    return assignment
-```
- 
-#### お題
-- ２つのテーマを決めておく
-- テーマごとにAIで似た２つのお題を作成する
-- AIにはお題を与える
 #### 勝敗条件
 - ラウンドは１ラウンド
 - 勝敗条件はAIが判定し、当たったほうが勝ち
 - 多数派ではなくキーワードから一番推測できる確率が高いものをAIは判定結果とする
-### MVP
-- お題はリストにしておく
-	- テーマを１つ
-	- お題のペアは３つ用意
-	- ３人の場合のみで行う
-- デバイス数は１つ
-	- デバイスを回して入力
-	- 進行役は１人決めておく
+
 ### 技術構成
 - フロント
 	- HTML/CSS
@@ -64,12 +28,3 @@ def assign_groups(player_names, pattern):
 - AI判定API
 	- Google gemini apiを使用
 
-
-## 開発メモ
-- 2026年8月5日開始
-- リアルタイム通信は使わず、1台の画面をみんなで囲む形式で実装予定
-- 8月6日
-    - git pullはgit fetch(取得)とgit merge(統合)を行う
-    - git fetchでパソコンのコードとgit上の最新のコードを比べて持っていないものをダウウンロード
-    - git mergeでパソコンのコードに反映させる
-    - branchはgitではmainが中心の木の幹のようにあってその枝がbranchのイメージ
