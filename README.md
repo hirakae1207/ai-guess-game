@@ -28,3 +28,32 @@ AIがどちらのお題に近いか判定して遊ぶパーティーゲーム。
 - AI判定API
 	- Google gemini apiを使用
 
+## 起動方法
+
+### 前提条件
+- Docker Desktop がインストールされていること
+
+### 手順
+
+1. リポジトリをクローン
+```bash
+   git clone https://github.com/hirakae1207/ai-guess-game.git
+   cd ai-guess-game
+```
+
+2. `.env`ファイルを作成し、以下の環境変数を設定
+- DB_ROOT_PASSWORD=任意のパスワード
+- DB_NAME=任意のDB名
+
+3. コンテナをビルドして起動
+```bash
+   docker compose up --build
+```
+
+4. ブラウザで以下にアクセス
+http://localhost:8000/static/index.html
+
+### 停止方法
+```bash
+docker compose down
+```
