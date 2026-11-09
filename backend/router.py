@@ -124,6 +124,15 @@ def assign_groups_and_save(
     result = crud.assign_groups_and_save(db, game_id)
     return result
 
+# assigned_topic, game_idからチーム分けの表示
+@router.get("/player/team/{game_id}")
+def get_team(
+    game_id:int,
+    db:Session = Depends(get_db)
+):
+    result = crud.get_team
+    return result
+
 # playerのtopicの表示
 @router.get("/player/topic/{player_id}")
 def get_player_topic(
