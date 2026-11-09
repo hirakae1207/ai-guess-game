@@ -53,6 +53,8 @@ def get_theme_by_game_id(
 #         result = result._asdict()
 
 #     return result
+
+# game_idごとにtopics.idとtopics.topic_textを表示
 def get_topic_by_game_id(
         db: Session,
         game_id: int
@@ -274,6 +276,44 @@ def assign_groups_and_save(
 
     return result
 
+
+# assigned_topic, game_idからチーム分けの表示
+def get_team(
+        db:Session,
+        game_id:int
+):
+    sql_topic = text(
+        """
+        SELECT Topic_pairs.topic1_id, Topic_pairs.topic2_id from Topic_pairs
+        INNER JOIN Games on Topic_pairs.theme_id = Games.theme_id
+        WHERE Games.id = :game_id
+        """
+    )
+    params_topic = {"game_id": game_id}
+    print(f"SQL: {sql_topic}\nParams: {params_topic}")
+    result_topic = db.execute(sql_topic, params_topic).mappings().all()
+    topic = result_topic[0]
+    topic1_id = topic["topic1_id"]
+    topic2_id = topic["topic2_id"]
+
+    sql_players = text(
+        """
+        SELECT Players.id, Players.name FROM Players 
+        INNER JOIN Games 
+        WHERE Games.id = :game_id AND Players.assigned_topic_id = :topic_id
+        """
+    )
+    params_players1 = {"game_id":game_id, "topic_id" :topic1_id}
+    params_players2 = {"game_id":game_id, "topic_id" :topic2_id}
+
+    print(f"SQL; {sql_players}\nParams: {params_players1}")
+    print(f"SQL; {sql_players}\nParams: {params_players2}")
+    players1 = db.execute(sql_players, params_players1).mappings().all()
+    players2 = db.execute(sql_players, params_players2).mappings().all()
+    db.commit()
+    return players1, players2
+
+
 # playerのtopicの表示
 def get_player_topic(
         db:Session,
@@ -302,6 +342,7 @@ class NgWordError(Exception):
 def contains_ng_word(text: str, ng_words: list) -> bool:
     return text in ng_words
 
+# keywordの作成
 def create_keyword(
         db: Session,
         content: dict,
@@ -335,6 +376,7 @@ def create_keyword(
     return get_keyword(db, player_id)
 
 
+# playerごとのkeywordを取り出す
 def get_keyword(
         db:Session,
         player_id: int
