@@ -5,6 +5,10 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from google import genai
 import os
 
+import json
+from pydantic import BaseModel
+from google.genai import types
+
 import re
 
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
@@ -125,12 +129,12 @@ def assign_groups_and_save(
     return result
 
 # assigned_topic, game_idからチーム分けの表示
-@router.get("/player/team/{game_id}")
+@router.get("/team/{game_id}")
 def get_team(
     game_id:int,
     db:Session = Depends(get_db)
 ):
-    result = crud.get_team
+    result = crud.get_team(db, game_id = game_id)
     return result
 
 # playerのtopicの表示
@@ -142,7 +146,7 @@ def get_player_topic(
     result = crud.get_player_topic(db, player_id=player_id)
 
     if result is None:
-        raise HTTPException(satus_code=404, detail="topic not found")
+        raise HTTPException(status_code=404, detail="topic not found")
     return result
 
 # keywordの追加
@@ -200,6 +204,13 @@ def get_keyword_by_topic(
 
     return result
 
+
+# jsonでもらうために追加
+class JudgeResult(BaseModel):
+    answer: int      # 0 か 1
+    message: str     # 100字以内の文章
+
+
 #AIの判定に使う
 @router.post("/judge")
 def AI_judge(
@@ -214,27 +225,40 @@ def AI_judge(
     topics = [top["topic_text"] for top in topic_result]
     keywords = [key["keyword"] for key in keyword_result]
 
+    options = [
+    {"answer": 0, "team": "A", "topic": topics[0]},
+    {"answer": 1, "team": "B", "topic": topics[1]},
+]
+    options_json = json.dumps(options, ensure_ascii=False, indent=2)
+
     prompt = (
         f"あなたはマジカルバナナに似たゲームに参加しています。"
         f"あなたのほかに3人の人間がいます。"
-        f"あなたは4人からキーワードをもらい、キーワードからより連想しやすいお題を応えます。"
-        f"テーマの{theme}にあったお題が2つ出されました。"
-        f"お題は「{topics[0]}」と「{topics[1]}」です。"
-        f"4人からのキーワードは{'、'.join(f'「{k}」' for k in keywords)}でした"
-        f"{topics[0]}と{topics[1]}のどちらでしょうか？"
-        f"必ず片方のみに絞ってください。"
-        f"以下に文章の制限を示します。"
-        f"字数制限は100字以内とします。"
-        f"10歳から15歳ぐらいの話し方にしてください。"
-        f"マークダウン方式は使用しないでください。"
-        f"これらの文章の制限を守り、解答時にはこれらの文章の制限には言及してはいけません。"
-        f"最後に答えがあっているかの確認の文章はいりません"
+        f"テーマは「{theme}」です。"
+        f"次の選択肢のうち、4人のキーワードから連想しやすいものを1つだけ選んでください。\n"
+        f"選択肢(JSON):\n{options_json}\n"
+        f"4人のキーワード: {'、'.join(f'「{k}」' for k in keywords)}\n"
+        f"出力のanswerには、選んだ選択肢のanswerの値(0か1)をそのまま入れてください。"
+        f"messageには、answerに従って選んだチームとお題、その理由を述べる文章のみを入れてください。"
+        f"messageの制限: 100字以内、10歳から15歳ぐらいの話し方、マークダウン不使用。"
+        f"これらの制限には言及しないでください。確認の文章も不要です。"
     )
 
     response = client.models.generate_content(
         model="gemini-3.1-flash-lite",
         contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=JudgeResult,
+        ),
     )
 
-    clean_text = re.sub(r"\*\*(.+?)\*\*", r"\1", response.text)
-    return{"response": clean_text}
+    result = json.loads(response.text)
+    answer_index =result["answer"]
+    message = result["message"]
+
+    return {
+        "response": message,
+        "answer": answer_index,
+        "winner_topic": topics[answer_index],
+    }

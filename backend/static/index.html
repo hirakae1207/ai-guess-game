@@ -42,7 +42,48 @@
                         お題をAIに当ててもらえた方が勝利!
                         <br>
                     </p>
-                    <button onclick="showNextPerson()">ゲームスタート</button>
+                    <button onclick="showTeam()">ゲームスタート</button>
+                </div>
+                <div id="screen-team" class="screen">
+                    <h3>チームA</h3>
+                    <div id="teamA"><!-- チームAのメンバー --></div>
+                    <h3>チームB</h3>
+                    <div id="teamB"><!-- チームBのメンバー --></div>
+                    <button onclick="goTeamA()">つぎへ</button>
+                </div>
+                <div id="screen-teamA" class="screen">
+                    <h2>チームA</h2>
+                    <button onclick="teamATopic()">お題を見る</button>
+                </div>
+                <div id="screen-topicA" class="screen">
+                    <div id="topicA"></div>
+                    <!-- Aのお題がでる -->
+                    <button onclick="goTeamB()">つぎへ</button>
+                </div>
+                <div id="screen-teamB" class="screen">
+                    <h2>チームB</h2>
+                    <button onclick="teamBTopic()">お題を見る</button>
+                </div>
+                <div id="screen-topicB" class="screen">
+                    <!-- Aのお題がでる -->
+                     <div id="topicB"></div>
+                    <button onclick="timerInstraction()">つぎへ</button>
+                </div>
+                <div id="screen-timer-instraction" class="screen">
+                    <!-- タイマー表示 -->
+                     チームでお題のキーワードを考えよう！
+                     <br>
+                     キーワードは1人につき1つだよ
+                     <br>
+                     AIに当ててもらえるようにお題の特徴をキーワードにしよう！！
+                     <br>
+                     考える時間は30秒だよ
+                     <br>
+                     <button onclick="startTimer()">開始</button>
+                </div>
+                <div id="screen-timer" class="screen">
+                    <div class="timer" id="countdown">30</div>
+                    <p id="timerMessage">作戦会議中...</p>
                 </div>
                 <div id="screen-next-person" class="screen">
                     <h2 id = "next-person">
@@ -60,12 +101,15 @@
                 </div>
                 <div id="screen-result" class="screen">
                 <h2>AIの判定は…</h2>
+                <h3 id="winner"><!--勝敗結果--></h3>
                 <div id="AI_judge"><!-- AIの判定内容 --></div>
                     <div id="topic_1">
+                    <h3>チームA</h3>
                     <h3 id="topic1"><!-- トピック1 --></h3>
                     <div id="keyword_topic1"><!--1キーワード--></div>
                     </div>
                     <div id="topic_2">
+                    <h3>チームB</h3>
                     <h3 id="topic2"><!--トピック2 --></h3>
                     <div id="keyword_topic2"></div>
                 </div>

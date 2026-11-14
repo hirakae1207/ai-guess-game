@@ -298,8 +298,8 @@ def get_team(
 
     sql_players = text(
         """
-        SELECT Players.id, Players.name FROM Players 
-        INNER JOIN Games 
+        SELECT Players.id, Players.name, Players.game_id FROM Players 
+        INNER JOIN Games on Players.game_id = Games.id
         WHERE Games.id = :game_id AND Players.assigned_topic_id = :topic_id
         """
     )
