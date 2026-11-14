@@ -98,3 +98,27 @@ input:focus{
   display: inline-block;
   width: 40%
 }
+
+.keyword-text {
+  font-weight: 800;
+}
+
+.name-text{
+  text-decoration: underline;
+  text-decoration-color: #2F4858;;   /* 線の色 */
+  text-decoration-thickness: 3px; 
+}
+
+#countdown{
+  font-size: 175px;
+  font-weight: 600;
+  color: #33658A;
+  text-align: center; 
+}
+
+#timerMessage{
+  font-size: 40px;
+  font-weight: 800;
+  color: #2F4858;
+  text-align: center; 
+}

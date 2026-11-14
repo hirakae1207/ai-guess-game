@@ -77,10 +77,143 @@ function createPlayer(){
         });
 }
 
+let teamA = []
+let teamB = []
+
+function showTeam(){
+    fetch(`/team/${gameId}`, {
+            method:"GET",
+            headers: {"Content-Type": "application/json"}
+        })
+        .then((response_team) =>{
+            if(!response_team.ok){
+                throw new Error(`HTTPエラー! ステータス: ${response_team.status}`);
+            }
+            return response_team.json();
+        })
+        .then((result_team) =>{
+            const teamA_div = document.getElementById("teamA")
+            const teamB_div = document.getElementById("teamB")
+            teamA_div.textContent = "";
+            teamB_div.textContent = "";
+
+            teamA = result_team[0]
+            teamB = result_team[1]
+
+            teamA.forEach((rowA) => {
+                const pA = document.createElement("p");
+                pA.textContent = rowA.name
+                teamA_div.appendChild(pA);
+            })
+            teamB.forEach((rowB) =>{
+                const pB = document.createElement("p");
+                pB.textContent = rowB.name
+                teamB_div.appendChild(pB);
+            })
+            showScreen("screen-team");
+        }).catch((error)=>{
+            console.error("エラー:", error);
+            alert("チームの表示に失敗しました。もう一度お試しください。")
+        })
+        
+    }
+
+
+function goTeamA(){
+    showScreen("screen-teamA")
+}
+
+function teamATopic(){
+    fetch(`/player/topic/${teamA[0].id}`,{
+        method: "GET", 
+        headers: {"Content-Type": "application/json"}
+    })
+    .then((response) =>{
+        if(!response.ok){
+            throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((result) =>{
+        const div_topicA = document.getElementById("topicA")
+        div_topicA.textContent = "";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = result.topic_text
+        div_topicA.appendChild(h2);
+
+        showScreen("screen-topicA")
+    })
+    .catch((error)=>{
+        console.error("エラー:", error);
+        alert("チームAのお題の表示に失敗しました。もう一度お試しください。")
+    })
+}
+
+function goTeamB(){
+    showScreen("screen-teamB")
+}
+
+function teamBTopic(){
+    fetch(`/player/topic/${teamB[0].id}`,{
+        method: "GET", 
+        headers: {"Content-Type": "application/json"}
+    })
+    .then((response) =>{
+        if(!response.ok){
+            throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then((result) =>{
+        const div_topicB = document.getElementById("topicB")
+        div_topicB.textContent = "";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = result.topic_text
+        div_topicB.appendChild(h2);
+
+        showScreen("screen-topicB")
+    })
+    .catch((error)=>{
+        console.error("エラー:", error);
+        alert("チームAのお題の表示に失敗しました。もう一度お試しください。")
+    })
+}
+
+function timerInstraction(){
+    showScreen("screen-timer-instraction")
+}
+
+function startTimer(){
+    const countDown = document.getElementById('countdown'); 
+    const targetTime = new Date().getTime() + 30000;
+
+    function updateCountDown(){
+        const now = new Date().getTime();
+        const distance = targetTime - now;
+
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+       countDown.textContent = `${String(seconds).padStart(2, '0')}`;
+
+        if(distance < 0){
+            clearInterval(interval);
+            showNextPerson()
+     }
+     }
+
+    const interval = setInterval(updateCountDown, 1000);
+     updateCountDown();
+    showScreen("screen-timer") 
+}
+
+
 
 // screen-instraction->screen-next-personの切り替えで使用
 // 画面が切り替わったらという処理には上記のような使い方
 let number = 0
+
 
 // 切り替わったら動く
 // plyaers[number]の名前の人を取得
@@ -88,7 +221,9 @@ let number = 0
 // 失敗したら、alertだす
 
 function showNextPerson(){
-    const player = players[number];
+    const teamAB = [...teamA, ...teamB];
+    const player = teamAB[number];
+    console.log(player)
     document.getElementById("next-person").textContent = `${player.name}さんへ`;
     showScreen("screen-next-person")
 }
@@ -171,6 +306,12 @@ function sendAI(){
         return response.json();
     })
     .then((result)=>{
+        if(result.answer_index = 0){
+            document.getElementById("winner").textContent = "チームAの勝利！"
+        }
+        else{
+            document.getElementById("winner").textContent = "チームBの勝利！"
+        }
         document.getElementById("AI_judge").textContent=result.response;
     })
     .catch((error) => {
@@ -266,9 +407,14 @@ function getKeyword() {
         targetDiv.innerHTML = "";
 
         topicGroup.forEach((row) => {
-          const p = document.createElement("p");
-          p.textContent = `${row.name}さん   ${row.keyword}`;
-          targetDiv.appendChild(p);
+            const p_1 = document.createElement("p");
+            p_1.textContent = `${row.name}さん`;
+            p_1.classList.add("name-text");
+            targetDiv.appendChild(p_1);
+            const p_2 = document.createElement("p");
+            p_2.textContent = `${row.keyword}`;
+            p_2.classList.add("keyword-text");
+            targetDiv.appendChild(p_2);
         });
       });
     })
